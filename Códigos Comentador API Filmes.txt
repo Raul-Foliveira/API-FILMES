@@ -1,0 +1,157 @@
+Index.js
+
+// Importação dos módulos necessários
+const express = require('express');
+const cors = require('cors'); // Pacote CORS para lidar com solicitações de diferentes origens
+const filmes = require('./filmes.json'); // Importação dos dados dos filmes
+const path = require('path');
+
+// Criação da instância do Express
+const app = express();
+
+// Definição da porta em que o servidor irá ouvir
+const PORT = 3000;
+
+// Configuração do middleware CORS para permitir solicitações de diferentes origens
+app.use(cors()); // Essa linha adiciona o middleware CORS ao aplicativo Express
+
+// Definição do middleware para servir arquivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Definição da rota para os filmes
+app.get('/filmes', (req, res) => {
+    res.json(filmes); // Retorna os dados dos filmes como uma resposta JSON
+});
+
+// Inicialização do servidor Express
+app.listen(PORT, () => {
+    console.log(`Servidor em execução em http://localhost:${PORT}`);
+});
+
+
+Index.html
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"> <!-- Definição do conjunto de caracteres UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configuração da viewport para dispositivos móveis -->
+    <title>Filmes</title> <!-- Título da página -->
+</head>
+<body>
+    <h1>Filmes</h1> <!-- Título principal da página -->
+
+    <div id="filmes-container"></div> <!-- Div para exibir os filmes -->
+
+    <!-- Script para buscar e exibir os dados dos filmes -->
+    <script>
+        // Função para buscar os dados dos filmes
+        fetch('http://localhost:3000/filmes') // Requisição GET para a rota /filmes do servidor
+            .then(response => response.json()) // Convertendo a resposta para JSON
+            .then(data => { // Manipulando os dados recebidos
+                const filmesContainer = document.getElementById('filmes-container'); // Obtendo a div onde os filmes serão exibidos
+                data.filmes.forEach(filme => { // Iterando sobre os filmes recebidos
+                    const filmeElement = document.createElement('div'); // Criando um elemento div para cada filme
+                    filmeElement.innerHTML = `
+                        <h2>${filme.nome}</h2> <!-- Exibindo o nome do filme -->
+                        <img src="${filme.foto}" alt="${filme.nome}"> <!-- Exibindo a foto do filme -->
+                        <p>${filme.descricao}</p> <!-- Exibindo a descrição do filme -->
+                        <p>Elenco: ${filme.elenco}</p> <!-- Exibindo o elenco do filme -->
+                    `;
+                    filmesContainer.appendChild(filmeElement); // Adicionando o elemento do filme à div de filmes
+                });
+            })
+            .catch(error => console.error('Erro ao buscar os dados dos filmes:', error)); // Tratamento de erros
+    </script>
+</body>
+</html>
+
+
+Agora, vamos analisar o código linha por linha:
+
+<!DOCTYPE html>: Declaração do tipo de documento HTML.
+
+<html lang="pt-br">: Abertura da tag HTML com o atributo lang definido como "pt-br" para especificar o idioma da página.
+
+<head>: Início da seção de cabeçalho da página.
+
+<meta charset="UTF-8">: Configuração do conjunto de caracteres como UTF-8 para suportar caracteres especiais.
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">: Configuração da viewport para dispositivos móveis.
+
+<title>Filmes</title>: Título da página exibido na aba do navegador.
+
+</head>: Fim da seção de cabeçalho da página e início do corpo.
+
+<body>: Início do corpo da página.
+
+<h1>Filmes</h1>: Título principal da página.
+
+<div id="filmes-container"></div>: Div que será usada para exibir os filmes.
+
+<script>: Início da seção de script para buscar e exibir os dados dos filmes.
+
+fetch('http://localhost:3000/filmes'): Requisição GET para a rota /filmes do servidor Express.
+
+.then(response => response.json()): Convertendo a resposta para JSON.
+
+.then(data => { ... }): Manipulando os dados recebidos.
+
+const filmesContainer = document.getElementById('filmes-container');: Obtendo a div onde os filmes serão exibidos.
+
+data.filmes.forEach(filme => { ... }): Iterando sobre os filmes recebidos.
+
+const filmeElement = document.createElement('div');: Criando um elemento div para cada filme.
+
+filmeElement.innerHTML = ...```: Inserindo HTML dentro do elemento div para exibir as informações do filme.
+
+filmesContainer.appendChild(filmeElement);: Adicionando o elemento do filme à div de filmes.
+
+</script>: Fim da seção de script.
+
+</body>: Fim do corpo da página.
+
+</html>: Fim do documento HTML.
+
+
+APP.js
+// Função para buscar e exibir os dados dos filmes
+fetch('http://localhost:3000/filmes') // Requisição GET para a rota /filmes do servidor
+    .then(response => response.json()) // Convertendo a resposta para JSON
+    .then(data => { // Manipulando os dados recebidos
+        const filmesContainer = document.getElementById('filmes-container'); // Obtendo a div onde os filmes serão exibidos
+        data.filmes.forEach(filme => { // Iterando sobre os filmes recebidos
+            const filmeElement = document.createElement('div'); // Criando um elemento div para cada filme
+            filmeElement.innerHTML = `
+                <h2>${filme.nome}</h2> <!-- Exibindo o nome do filme -->
+                <img src="${filme.foto}" alt="${filme.nome}"> <!-- Exibindo a foto do filme -->
+                <p>${filme.descricao}</p> <!-- Exibindo a descrição do filme -->
+                <p>Elenco: ${filme.elenco}</p> <!-- Exibindo o elenco do filme -->
+            `;
+            filmesContainer.appendChild(filmeElement); // Adicionando o elemento do filme à div de filmes
+        });
+    })
+    .catch(error => console.error('Erro ao buscar os dados dos filmes:', error)); // Tratamento de erros
+
+
+Agora, vamos analisar o código linha por linha:
+
+fetch('http://localhost:3000/filmes'): Requisição GET para a rota /filmes do servidor Express.
+
+.then(response => response.json()): Convertendo a resposta para JSON.
+
+.then(data => { ... }): Manipulando os dados recebidos.
+
+const filmesContainer = document.getElementById('filmes-container');: Obtendo a div onde os filmes serão exibidos.
+
+data.filmes.forEach(filme => { ... }): Iterando sobre os filmes recebidos.
+
+const filmeElement = document.createElement('div');: Criando um elemento div para cada filme.
+
+filmeElement.innerHTML = ...```: Inserindo HTML dentro do elemento div para exibir as informações do filme.
+
+filmesContainer.appendChild(filmeElement);: Adicionando o elemento do filme à div de filmes.
+
+catch(error => console.error('Erro ao buscar os dados dos filmes:', error));: Tratamento de erros em caso de falha na requisição.
+
+Essas são as principais linhas de código do arquivo app.js, responsáveis por buscar os dados dos filmes na API e exibi-los na página HTML. O código usa o método fetch para fazer uma requisição AJAX para o servidor, manipula os dados recebidos e os exibe na página usando JavaScript.
